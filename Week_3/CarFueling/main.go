@@ -1,30 +1,55 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 func main() {
-	var dist, rng, stationNum int
-	stations := []int{0} // init stations with starting point 0
+
+	var dist int
 	fmt.Scan(&dist)
-	fmt.Scan(&rng)
-	fmt.Scan(&stationNum)
-	for i := 0; i < stationNum; i++ { // O(n)
+
+	var carRange int
+	fmt.Scan(&carRange)
+
+	var n int
+	fmt.Scan(&n)
+
+	var stations []int
+	for i := 0; i < n; i++ { // O(n)	// add gas stations
 		var station int
 		fmt.Scan(&station)
 		stations = append(stations, station)
 	}
-	stations = append(stations, rng) // add dest point
+	counter := travel(dist, carRange, stations)
+	fmt.Println(counter)
+
 }
 
-func travel(dist int, rng int, stations []int) int {
-	// min_stops := -1
-	var min_stops int
-	for i := 0; i < len(stations); i++ { //O(n)
-		if  
-		for i := +1 ; i < len(stations); i++{
-	
+func travel(dist int, carRange int, stations []int) int {
+
+	// stations = append(stations, dist) // add finish
+	sort.Sort(sort.Reverse(sort.IntSlice(stations)))
+
+	currentPoint := 0
+	counter := 0
+OUTER:
+	for carRange < dist-currentPoint { // while not enough fuel  to reach finish
+		for _, station := range stations {
+
+			if station <= currentPoint+carRange { // take first max that fits
+				if currentPoint == station { // if doesnt point doesnt change > stale exit
+					return -1
+				}
+				currentPoint = station
+				counter++
+				continue OUTER // break the search for currrent position
+			}
+
 		}
-		min_stops++
+
 	}
-	return min_stops
+
+	return counter
 }
